@@ -1,0 +1,27 @@
+# docker-compose.prod.yml — Prueba local de imágenes de producción
+# Uso: docker compose -f docker-compose.prod.yml up
+# Requiere .env.docker con todas las variables de entorno configuradas.
+name: gopasstasks-prod-test
+
+services:
+  api:
+    build:
+      context: ./gopasstasks-api
+      dockerfile: Dockerfile     # Imagen multi-stage de producción
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      FRONTEND_URL: ${FRONTEND_URL}
+      PORT: 3000
+    ports:
+      - "3000:3000"
+
+  web:
+    build:
+      context: ./gopasstasks-web
+      dockerfile: Dockerfile     # Imagen multi-stage con Nginx
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+    ports:
+      - "80:80"

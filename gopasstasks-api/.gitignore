@@ -1,0 +1,25 @@
+# gopasstasks-api — .gitignore
+# Complementa el .gitignore raíz del monorepo
+
+node_modules/
+dist/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Prisma
+prisma/.env
+
+# Logs
+logs/
+*.log
+
+# Testing
+coverage/
+test-results/
+
+# TypeScript build info
+*.tsbuildinfo
+tsconfig.tsbuildinfo

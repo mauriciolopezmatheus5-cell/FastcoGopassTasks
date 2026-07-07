@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="140" height="32" viewBox="0 0 140 32" fill="none">
+  <!-- Ícono: cuadrado redondeado verde con G + checkmark -->
+  <rect width="32" height="32" rx="8" fill="#22C55E"/>
+  <text x="7" y="22" font-size="18" font-weight="800" fill="white" font-family="Inter, system-ui, sans-serif">G</text>
+  <polyline points="13,20 16,23 22,16" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- Texto: "Gopass" en slate-900 + "Tasks" en indigo-600 -->
+  <text x="40" y="21" font-size="15" font-weight="700" fill="#0F172A" font-family="Inter, system-ui, sans-serif" letter-spacing="-0.025em">Gopass</text>
+  <text x="88" y="21" font-size="15" font-weight="700" fill="#6366F1" font-family="Inter, system-ui, sans-serif" letter-spacing="-0.025em">Tasks</text>
+</svg>

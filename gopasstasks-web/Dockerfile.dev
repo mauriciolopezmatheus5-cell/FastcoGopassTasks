@@ -1,0 +1,18 @@
+FROM node:20-alpine
+
+RUN apk add --no-cache dumb-init
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+# Copiar archivos de configuración necesarios para Vite
+COPY index.html vite.config.ts tsconfig.json tsconfig.app.json tsconfig.node.json ./
+
+# El código fuente se monta como volumen — permite Vite HMR
+EXPOSE 5173
+
+ENTRYPOINT ["dumb-init", "--"]
+# host: 0.0.0.0 necesario para que Docker exponga el puerto al host
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

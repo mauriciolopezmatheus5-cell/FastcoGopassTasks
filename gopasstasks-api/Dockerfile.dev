@@ -1,0 +1,19 @@
+FROM node:20-alpine
+
+# dumb-init reenvía SIGTERM al proceso hijo correctamente (crítico para ECS drain)
+RUN apk add --no-cache dumb-init
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+# Copiar prisma schema para que esté disponible si se monta como volumen
+COPY prisma ./prisma
+
+# El código fuente se monta como volumen — permite NestJS hot-reload
+EXPOSE 3000
+
+ENTRYPOINT ["dumb-init", "--"]
+# Generar Prisma Client antes de iniciar la app en caso de que no esté presente
+CMD ["sh", "-c", "npx prisma generate && npm run start:dev"]

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="56" viewBox="0 0 160 56" fill="none">
+  <!-- Ícono centrado más grande -->
+  <rect x="64" y="0" width="32" height="32" rx="8" fill="#22C55E"/>
+  <text x="71" y="22" font-size="18" font-weight="800" fill="white" font-family="Inter, system-ui, sans-serif">G</text>
+  <polyline points="77,20 80,23 86,16" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- Nombre completo centrado -->
+  <text x="80" y="44" font-size="15" font-weight="700" fill="#0F172A" font-family="Inter, system-ui, sans-serif" text-anchor="middle" letter-spacing="-0.025em">Gopass<tspan fill="#6366F1">Tasks</tspan></text>
+
+  <!-- Subtítulo WORKSPACE -->
+  <text x="80" y="54" font-size="10" font-weight="400" fill="#94A3B8" font-family="Inter, system-ui, sans-serif" text-anchor="middle" letter-spacing="0.05em">WORKSPACE</text>
+</svg>

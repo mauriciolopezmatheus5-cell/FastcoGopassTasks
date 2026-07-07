@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TaskStatus {
+  BACKLOG
+  EN_PROGRESO
+  PRUEBAS_QA
+  LISTO
+  APROBADO
+}
+
+model User {
+  id           String          @id @default(uuid())
+  name         String
+  email        String          @unique
+  passwordHash String          @map("password_hash")
+  isActive     Boolean         @default(true) @map("is_active")
+  roleId       String          @map("role_id")
+  role         Role            @relation(fields: [roleId], references: [id])
+  projects     ProjectMember[]
+  tasksAssigned TaskMember[]
+  workLogs     TaskWorkLog[]
+  createdAt    DateTime        @default(now()) @map("created_at")
+  updatedAt    DateTime        @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  users       User[]
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("roles")
+}
+
+model Project {
+  id          String          @id @default(uuid())
+  name        String
+  description String?
+  members     ProjectMember[]
+  tasks       Task[]
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+
+  @@map("projects")
+}
+
+model ProjectMember {
+  userId    String
+  projectId String
+  role      String
+  user      User    @relation(fields: [userId], references: [id])
+  project   Project @relation(fields: [projectId], references: [id])
+
+  @@id([userId, projectId])
+  @@map("project_members")
+}
+
+model Task {
+  id               String                   @id @default(uuid())
+  projectId        String                   @map("project_id")
+  project          Project                  @relation(fields: [projectId], references: [id])
+  title            String
+  description      String?
+  status           TaskStatus               @default(BACKLOG)
+  priority         Int                      @default(0)
+  startDate        DateTime?                @map("start_date")
+  dueDate          DateTime?                @map("due_date")
+  endDate          DateTime?                @map("end_date")
+  estimatedTimeMin Int                      @default(0) @map("estimated_time_minutes")
+  members          TaskMember[]
+  workLogs         TaskWorkLog[]
+  history          TaskDescriptionHistory[]
+  createdAt        DateTime                 @default(now()) @map("created_at")
+  updatedAt        DateTime                 @updatedAt @map("updated_at")
+
+  @@map("tasks")
+}
+
+model TaskMember {
+  taskId String
+  userId String
+  task   Task   @relation(fields: [taskId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@id([taskId, userId])
+  @@map("task_members")
+}
+
+model TaskWorkLog {
+  id          String   @id @default(uuid())
+  taskId      String   @map("task_id")
+  userId      String   @map("user_id")
+  task        Task     @relation(fields: [taskId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
+  timeSpent   Int      @map("time_spent_minutes")
+  description String?
+  recordedAt  DateTime @default(now()) @map("recorded_at")
+
+  @@map("task_work_logs")
+}
+
+model TaskDescriptionHistory {
+  id          String   @id @default(uuid())
+  taskId      String   @map("task_id")
+  task        Task     @relation(fields: [taskId], references: [id])
+  description String
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("task_description_history")
+}
