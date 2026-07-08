@@ -1,73 +1,161 @@
-# React + TypeScript + Vite
+# GopassTasks Web 🌐
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend del sistema GopassTasks. Construido con **React 18 + Vite**, **TailwindCSS** y **TanStack Query**, siguiendo la metodología **Atomic Design** con TypeScript en strict mode.
 
-Currently, two official plugins are available:
+> Para levantar el entorno completo con Docker, consulta el [README raíz](../README.md).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Categoría | Tecnología |
+|---|---|
+| Core | React 18+ |
+| Bundler | Vite 6+ |
+| Lenguaje | TypeScript (strict mode) |
+| Estilos | TailwindCSS |
+| Estado servidor | TanStack Query (React Query) |
+| Estado global | Zustand |
+| Validación | Zod |
+| Formularios | React Hook Form + @hookform/resolvers |
+| HTTP | Axios (con interceptores globales) |
+| Notificaciones | Sonner |
+| Router | React Router v6 |
+| Testing | Vitest + Testing Library |
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Prerrequisitos (desarrollo local sin Docker)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js 20+
+- API backend corriendo en `http://localhost:3000`
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Instalación
+
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Variables de Entorno
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cp .env.example .env.development
+```
+
+| Variable | Descripción |
+|---|---|
+| `VITE_API_URL` | URL base de la API (ej: `http://localhost:3000/api`) |
+
+---
+
+## Ejecutar en Desarrollo
+
+```bash
+npm run dev
+```
+
+La app estará disponible en: `http://localhost:5173`
+
+---
+
+## Build de Producción
+
+```bash
+npm run build
+npm run preview   # previsualizar el build localmente
+```
+
+---
+
+## Tests
+
+```bash
+# Tests unitarios
+npm run test
+
+# Tests en modo watch
+npm run test:watch
+
+# Cobertura de código
+npm run test:coverage
+```
+
+---
+
+## Arquitectura — Atomic Design
+
+```
+src/
+├── components/
+│   ├── atoms/              # Elementos básicos: Button, Input, Badge, Spinner, Avatar, Label
+│   ├── molecules/          # Grupos simples: FormField, SearchBar, TaskStatusBadge, PriorityIndicator
+│   ├── organisms/          # Componentes complejos: Navbar, Sidebar, TaskCard, TaskBoard, TaskForm, ProjectList
+│   └── templates/          # Layouts: DashboardLayout, AuthLayout
+├── pages/                  # Vistas finales: LoginPage, DashboardPage, ProjectDetailPage, TaskDetailPage
+├── hooks/
+│   ├── queries/            # TanStack Query hooks: useProjects, useTasks, useTask, useWorkLogs
+│   └── mutations/          # Mutation hooks: useCreateTask, useUpdateTaskStatus, useLogWork
+├── store/                  # Zustand: auth.store (usuario), ui.store (sidebar)
+├── lib/                    # axios.ts, query-client.ts, design-tokens.ts, figma-map.ts
+├── types/                  # DTOs del frontend: task.types.ts, admin.types.ts
+├── router/                 # AppRouter.tsx, ProtectedRoute.tsx
+└── config/
+    └── env.ts              # Validación de variables de entorno (fail fast)
+```
+
+**Jerarquía de responsabilidades:**
+
+| Capa | Responsabilidad |
+|---|---|
+| Atoms | Solo renderizado visual. Sin lógica ni llamadas a API. |
+| Molecules | Composición de átomos. Sin llamadas a API. |
+| Organisms | Pueden usar hooks de datos y lógica propia. |
+| Templates | Solo estructura/grid. Sin datos reales. |
+| Pages | Orquestan templates + organisms + hooks. |
+
+---
+
+## Rutas
+
+| Ruta | Página | Protegida |
+|---|---|---|
+| `/login` | `LoginPage` | ❌ |
+| `/projects` | `DashboardPage` | ✅ |
+| `/projects/:id` | `ProjectDetailPage` | ✅ |
+| `/tasks/:id` | `TaskDetailPage` | ✅ |
+| `/admin` | `AdminPage` | ✅ ADMIN |
+
+Las rutas protegidas redirigen a `/login` si no hay sesión activa.
+
+---
+
+## Convenciones Clave
+
+- **Sin `useEffect` para API** — toda llamada usa TanStack Query.
+- **Sin `any`** — TypeScript strict mode en todo momento.
+- **Sin estilos inline** — Tailwind es el único motor de estilos.
+- **Imports absolutos** con alias `@/` → `src/`.
+- **Validación Zod** sobre cada respuesta del servidor antes de usarla en UI.
+- **Optimistic updates** en cambios de estado de tareas con rollback automático.
+
+---
+
+## Seguridad
+
+- Las cookies HttpOnly del JWT son enviadas automáticamente por Axios (`withCredentials: true`).
+- Interceptor de Axios maneja 401 → redirección a login, 403 → toast de permisos.
+- `ProtectedRoute` verifica el store de Zustand antes de renderizar rutas privadas.
+
+---
+
+## Linting y Tipado
+
+```bash
+npm run lint
+npm run lint:fix
+npm run type-check
 ```

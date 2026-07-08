@@ -2,24 +2,21 @@
  * Tipos, enums y constantes de tareas para el frontend.
  * Los colores y etiquetas están extraídos del Figma GopassTasks.
  * Los valores del enum coinciden con el backend (NestJS + Prisma).
- *
- * Nota: El Figma usa nombres en inglés internamente (BACKLOG, IN_PROGRESS, QA, DONE, APPROVED),
- * pero el backend define los valores en español. Se usan los valores del backend.
  */
 
 // ── Enum de estados ─────────────────────────────────────────────────────────
 
 /** Estados posibles de una tarea. Espejo exacto del enum Prisma del backend. */
 export const TaskStatus = {
-  BACKLOG:     'BACKLOG',
-  EN_PROGRESO: 'EN_PROGRESO',
-  PRUEBAS_QA:  'PRUEBAS_QA',
-  LISTO:       'LISTO',
-  APROBADO:    'APROBADO',
+  PENDIENTE:  'PENDIENTE',
+  COMPLETADA: 'COMPLETADA',
 } as const;
 
 export type TaskStatus = typeof TaskStatus[keyof typeof TaskStatus];
 
+// ── Enum de prioridad ────────────────────────────────────────────────────────
+
+/** Niveles de prioridad numérica. Rango -100 a 100. */
 // ── Enum de prioridad ────────────────────────────────────────────────────────
 
 /** Niveles de prioridad numérica. Rango -100 a 100. */
@@ -38,17 +35,10 @@ export type PriorityLevel = typeof PriorityLevel[keyof typeof PriorityLevel];
 
 // ── Etiquetas de visualización ───────────────────────────────────────────────
 
-/**
- * Etiquetas de texto en español para cada estado de tarea.
- * Coinciden con las etiquetas visuales del tablero Kanban del Figma.
- * Si se agrega un nuevo TaskStatus sin actualizar este objeto → error de compilación.
- */
+/** Etiquetas de texto en español para cada estado de tarea. */
 export const TASK_STATUS_LABELS: Record<TaskStatus, string> = {
-  [TaskStatus.BACKLOG]:     'Backlog',
-  [TaskStatus.EN_PROGRESO]: 'En Progreso',
-  [TaskStatus.PRUEBAS_QA]:  'Pruebas QA',
-  [TaskStatus.LISTO]:       'Listo',
-  [TaskStatus.APROBADO]:    'Aprobado',
+  [TaskStatus.PENDIENTE]:  'Pendiente',
+  [TaskStatus.COMPLETADA]: 'Completada',
 };
 
 /**
@@ -64,22 +54,12 @@ export const PRIORITY_LABELS: Record<PriorityLevel, string> = {
 
 // ── Estilos de Tailwind por estado ───────────────────────────────────────────
 
-/**
- * Clases de Tailwind para el badge de cada estado de tarea.
- * Los colores son exactamente los que aparecen en el Figma.
- * Configurados en tailwind.config.js bajo `colors.status.*`.
- */
+/** Clases de Tailwind para el badge de cada estado de tarea. */
 export const TASK_STATUS_STYLES: Record<TaskStatus, string> = {
-  [TaskStatus.BACKLOG]:
-    'bg-status-backlog text-status-text-backlog',
-  [TaskStatus.EN_PROGRESO]:
-    'bg-status-en-progreso text-status-text-en-progreso',
-  [TaskStatus.PRUEBAS_QA]:
-    'bg-status-pruebas-qa text-status-text-pruebas-qa',
-  [TaskStatus.LISTO]:
-    'bg-status-listo text-status-text-listo',
-  [TaskStatus.APROBADO]:
-    'bg-status-aprobado text-status-text-aprobado',
+  [TaskStatus.PENDIENTE]:
+    'bg-status-pendiente text-status-text-pendiente',
+  [TaskStatus.COMPLETADA]:
+    'bg-status-completada text-status-text-completada',
 };
 
 /**
@@ -87,11 +67,8 @@ export const TASK_STATUS_STYLES: Record<TaskStatus, string> = {
  * Usado como indicador visual pequeño junto al nombre del estado.
  */
 export const TASK_STATUS_DOT_STYLES: Record<TaskStatus, string> = {
-  [TaskStatus.BACKLOG]:     'bg-status-dot-backlog',
-  [TaskStatus.EN_PROGRESO]: 'bg-status-dot-en-progreso',
-  [TaskStatus.PRUEBAS_QA]:  'bg-status-dot-pruebas-qa',
-  [TaskStatus.LISTO]:       'bg-status-dot-listo',
-  [TaskStatus.APROBADO]:    'bg-status-dot-aprobado',
+  [TaskStatus.PENDIENTE]:  'bg-status-dot-pendiente',
+  [TaskStatus.COMPLETADA]: 'bg-status-dot-completada',
 };
 
 // ── Estilos de Tailwind por prioridad ────────────────────────────────────────
@@ -114,38 +91,26 @@ export const PRIORITY_STYLES: Record<PriorityLevel, string> = {
 // ── Matriz de transiciones válidas ────────────────────────────────────────────
 
 /**
- * Transiciones de estado permitidas para una tarea.
- * Coincide con la lógica de negocio del backend (T-TASK-04).
+ * Transiciones de estado permitidas para una tarea (bidireccionales).
  * Usado en el selector de estado de TaskDetailPage.
  */
 export const TASK_STATUS_TRANSITIONS: Record<TaskStatus, TaskStatus[]> = {
-  [TaskStatus.BACKLOG]:     [TaskStatus.EN_PROGRESO],
-  [TaskStatus.EN_PROGRESO]: [TaskStatus.PRUEBAS_QA, TaskStatus.BACKLOG],
-  [TaskStatus.PRUEBAS_QA]:  [TaskStatus.EN_PROGRESO, TaskStatus.LISTO],
-  [TaskStatus.LISTO]:       [TaskStatus.APROBADO, TaskStatus.EN_PROGRESO],
-  [TaskStatus.APROBADO]:    [], // estado final — sin transiciones
+  [TaskStatus.PENDIENTE]:  [TaskStatus.COMPLETADA],
+  [TaskStatus.COMPLETADA]: [TaskStatus.PENDIENTE],
 };
 
 // ── Orden de columnas del tablero Kanban ──────────────────────────────────────
 
-/**
- * Orden de las columnas en el tablero Kanban.
- * Coincide con el orden visual del Figma de izquierda a derecha.
- */
+/** Orden de las columnas en el tablero Kanban (izquierda → derecha). */
 export const KANBAN_COLUMN_ORDER: TaskStatus[] = [
-  TaskStatus.BACKLOG,
-  TaskStatus.EN_PROGRESO,
-  TaskStatus.PRUEBAS_QA,
-  TaskStatus.LISTO,
-  TaskStatus.APROBADO,
+  TaskStatus.PENDIENTE,
+  TaskStatus.COMPLETADA,
 ];
 
 // ── Función auxiliar para inferir nivel de prioridad ─────────────────────────
 
 /**
  * Infiere el nivel de prioridad a partir de un valor numérico (-100 a 100).
- * Usado para mostrar el badge de prioridad a partir del campo `priority` de la tarea.
- *
  * @param priority - Valor numérico de prioridad (-100 a 100)
  * @returns El nivel de prioridad correspondiente
  */

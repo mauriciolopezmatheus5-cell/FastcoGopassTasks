@@ -11,7 +11,7 @@ import {
 /**
  * Caso de uso: Cambiar el estado de una tarea.
  * Valida que la transición sea permitida según la matriz VALID_TRANSITIONS.
- * Si el nuevo estado es APROBADO y la tarea tiene descripción, guarda el historial.
+ * Si el nuevo estado es COMPLETADA y la tarea tiene descripción, guarda el historial.
  */
 export class ChangeTaskStatusUseCase {
   constructor(private readonly taskRepository: ITaskRepository) {}
@@ -42,17 +42,19 @@ export class ChangeTaskStatusUseCase {
       );
     }
 
-    // Guardar historial de descripción al aprobar
-    if (newStatus === TaskStatus.APROBADO && task.description) {
+    // Guardar historial de descripción al completar
+    if (newStatus === TaskStatus.COMPLETADA && task.description) {
       await this.taskRepository.saveDescriptionHistory(taskId, task.description);
     }
 
     task.status = newStatus;
     task.updatedAt = new Date();
 
-    // Si se aprueba, marcar fecha de finalización
-    if (newStatus === TaskStatus.APROBADO) {
+    // Al completar, marcar fecha de finalización; al reabrir, limpiarla
+    if (newStatus === TaskStatus.COMPLETADA) {
       task.endDate = new Date();
+    } else {
+      task.endDate = null;
     }
 
     const updated = await this.taskRepository.update(task);

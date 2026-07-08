@@ -8,11 +8,8 @@ datasource db {
 }
 
 enum TaskStatus {
-  BACKLOG
-  EN_PROGRESO
-  PRUEBAS_QA
-  LISTO
-  APROBADO
+  PENDIENTE
+  COMPLETADA
 }
 
 model User {
@@ -72,7 +69,7 @@ model Task {
   project          Project                  @relation(fields: [projectId], references: [id])
   title            String
   description      String?
-  status           TaskStatus               @default(BACKLOG)
+  status           TaskStatus               @default(PENDIENTE)
   priority         Int                      @default(0)
   startDate        DateTime?                @map("start_date")
   dueDate          DateTime?                @map("due_date")

@@ -29,9 +29,9 @@ export class LogWorkUseCase {
       throw new RecursoNoEncontradoException('tarea', taskId);
     }
 
-    if (task.status === TaskStatus.APROBADO) {
+    if (task.status === TaskStatus.COMPLETADA) {
       throw new ReglaNegocioException(
-        'No se puede registrar tiempo en una tarea que ya está aprobada.',
+        'No se puede registrar tiempo en una tarea que ya está completada.',
       );
     }
 

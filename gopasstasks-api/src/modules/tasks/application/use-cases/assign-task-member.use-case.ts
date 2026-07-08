@@ -34,9 +34,9 @@ export class AssignTaskMemberUseCase {
       throw new RecursoNoEncontradoException('tarea', taskId);
     }
 
-    if (task.status === TaskStatus.APROBADO) {
+    if (task.status === TaskStatus.COMPLETADA) {
       throw new ReglaNegocioException(
-        'No se pueden asignar miembros a una tarea que ya está aprobada.',
+        'No se pueden asignar miembros a una tarea que ya está completada.',
       );
     }
 

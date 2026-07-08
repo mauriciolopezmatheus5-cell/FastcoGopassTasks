@@ -1,4 +1,4 @@
-# Política de Seguridad — GopassTasks
+# Política de Seguridad — Fastco GopassTasks
 
 ## Versiones Soportadas
 
@@ -14,7 +14,7 @@
 
 Si descubres una vulnerabilidad, por favor:
 
-1. **Envía un reporte privado** a través de [GitHub Security Advisories](https://github.com/mauriciolopezmatheus5-cell/mlGopassTasks/security/advisories/new)
+1. **Envía un reporte privado** a través de [GitHub Security Advisories]
 2. Incluye en tu reporte:
    - Descripción de la vulnerabilidad
    - Pasos para reproducirla

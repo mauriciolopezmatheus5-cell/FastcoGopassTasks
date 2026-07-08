@@ -99,7 +99,14 @@ export class PrismaTaskRepository implements ITaskRepository {
   /** {@inheritdoc ITaskRepository.delete} */
   async delete(id: string): Promise<void> {
     try {
-      await this.prisma.task.delete({ where: { id } });
+      // Eliminar registros relacionados antes de borrar la tarea
+      // (las FK no tienen CASCADE en la BD, se gestiona aquí)
+      await this.prisma.$transaction([
+        this.prisma.taskMember.deleteMany({ where: { taskId: id } }),
+        this.prisma.taskWorkLog.deleteMany({ where: { taskId: id } }),
+        this.prisma.taskDescriptionHistory.deleteMany({ where: { taskId: id } }),
+        this.prisma.task.delete({ where: { id } }),
+      ]);
     } catch (error) {
       if (isPrismaClientKnownRequestError(error) && error.code === 'P2025') {
         throw new RecursoNoEncontradoException('tarea', id);

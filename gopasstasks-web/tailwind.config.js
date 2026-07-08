@@ -35,26 +35,17 @@ export default {
         'border-subtle':  '#F1F5F9', // Slate-100 — borde muy sutil
         'border-focus':   '#6366F1', // Indigo-600 — borde en foco
 
-        // ── Estados de tarea (extraídos del tablero Kanban del Figma) ─
-        'status-backlog':       '#F1F5F9', // slate-100 — fondo badge BACKLOG
-        'status-en-progreso':   '#DBEAFE', // blue-100  — fondo badge EN_PROGRESO
-        'status-pruebas-qa':    '#FEF3C7', // amber-100 — fondo badge PRUEBAS_QA
-        'status-listo':         '#D1FAE5', // emerald-100 — fondo badge LISTO
-        'status-aprobado':      '#EDE9FE', // violet-100 — fondo badge APROBADO
+        // ── Estados de tarea ─────────────────────────────────────────
+        'status-pendiente':      '#FEF3C7', // amber-100  — fondo badge PENDIENTE
+        'status-completada':     '#D1FAE5', // emerald-100 — fondo badge COMPLETADA
 
         // ── Texto de estados de tarea ────────────────────────────────
-        'status-text-backlog':       '#475569', // slate-600
-        'status-text-en-progreso':   '#1D4ED8', // blue-700
-        'status-text-pruebas-qa':    '#B45309', // amber-700
-        'status-text-listo':         '#047857', // emerald-700
-        'status-text-aprobado':      '#6D28D9', // violet-700
+        'status-text-pendiente':  '#B45309', // amber-700
+        'status-text-completada': '#047857', // emerald-700
 
         // ── Puntos/dots de estado ────────────────────────────────────
-        'status-dot-backlog':        '#94A3B8', // slate-400
-        'status-dot-en-progreso':    '#3B82F6', // blue-500
-        'status-dot-pruebas-qa':     '#F59E0B', // amber-500
-        'status-dot-listo':          '#10B981', // emerald-500
-        'status-dot-aprobado':       '#8B5CF6', // violet-500
+        'status-dot-pendiente':   '#F59E0B', // amber-500
+        'status-dot-completada':  '#10B981', // emerald-500
 
         // ── Logo / Branding ──────────────────────────────────────────
         'brand-icon':   '#22C55E', // green-500 — fondo del ícono del logo

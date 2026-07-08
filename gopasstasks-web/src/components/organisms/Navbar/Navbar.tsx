@@ -24,8 +24,7 @@ export const Navbar: React.FC = () => {
   return (
     <nav className="bg-background-card border-b border-border px-6 py-4 flex justify-between items-center">
       <div className="flex items-center gap-2">
-        <img src="/assets/branding/logo-header.svg" alt="GopassTasks" className="h-8" />
-        <h1 className="font-bold text-lg text-text-primary">GopassTasks</h1>
+        <h1 className="font-bold text-lg text-text-primary">Fastco GopassTasks</h1>
       </div>
       <div className="flex items-center gap-4">
         <span className="text-sm text-text-secondary">{usuario?.name}</span>

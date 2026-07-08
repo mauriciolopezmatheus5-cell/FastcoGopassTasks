@@ -43,7 +43,7 @@ export class CreateTaskUseCase {
       dto.projectId,
       dto.title,
       dto.description ?? null,
-      TaskStatus.BACKLOG,
+      TaskStatus.PENDIENTE,
       dto.priority ?? 0,
       dto.startDate ? new Date(dto.startDate) : null,
       dto.dueDate ? new Date(dto.dueDate) : null,

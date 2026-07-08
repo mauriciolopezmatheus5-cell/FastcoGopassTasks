@@ -1,4 +1,4 @@
-# GopassTasks 🚀
+# Fastco GopassTasks 🚀
 
 Sistema de gestión de tareas por proyectos. Backend NestJS con arquitectura hexagonal, frontend React + Vite, base de datos PostgreSQL, y despliegue en AWS ECS Fargate.
 
@@ -75,7 +75,7 @@ docker compose ps
 ## Estructura del Proyecto
 
 ```
-GopassTasks/
+Tasks/
 ├── docker-compose.yml          ← Entorno de desarrollo local
 ├── docker-compose.prod.yml     ← Prueba local de imágenes de producción
 ├── .env.docker.example         ← Plantilla de variables (se commitea)

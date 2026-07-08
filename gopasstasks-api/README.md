@@ -1,98 +1,232 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# GopassTasks API 🔧
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Backend REST API del sistema GopassTasks. Construido con **NestJS**, **Prisma ORM** y **PostgreSQL**, siguiendo **Arquitectura Hexagonal (Ports & Adapters)** con principios SOLID y Clean Architecture.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+> Para levantar el entorno completo con Docker, consulta el [README raíz](../README.md).
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Stack
 
-## Project setup
+| Capa | Tecnología |
+|---|---|
+| Framework | NestJS 10+ |
+| Lenguaje | TypeScript (strict mode) |
+| Base de datos | PostgreSQL 16 |
+| ORM | Prisma ORM |
+| Autenticación | JWT en Cookies HttpOnly |
+| Caché | Redis 7 |
+| Documentación | Swagger / OpenAPI 3.0 |
+| Testing | Jest + Supertest |
 
-```bash
-$ npm install
-```
+---
 
-## Compile and run the project
+## Prerrequisitos (desarrollo local sin Docker)
+
+- Node.js 20+
+- PostgreSQL 16 corriendo localmente
+- Redis 7 corriendo localmente (opcional para desarrollo)
+
+---
+
+## Instalación
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Run tests
+---
+
+## Variables de Entorno
+
+Copia el archivo de ejemplo y configura los valores:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+cp .env.example .env
 ```
 
-## Deployment
+| Variable | Descripción | Requerida |
+|---|---|---|
+| `NODE_ENV` | Entorno de ejecución (`development` / `production`) | ✅ |
+| `PORT` | Puerto del servidor (default: `3000`) | — |
+| `DATABASE_URL` | URL de conexión a PostgreSQL | ✅ |
+| `JWT_SECRET` | Secreto JWT (mínimo 32 caracteres) | ✅ |
+| `FRONTEND_URL` | URL del frontend para CORS | ✅ |
+| `REDIS_HOST` | Host de Redis (default: `localhost`) | — |
+| `REDIS_PORT` | Puerto de Redis (default: `6379`) | — |
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+---
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Base de Datos
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Aplicar migraciones
+npx prisma migrate dev
+
+# Poblar con datos iniciales (roles + usuario admin)
+npx prisma db seed
+
+# Abrir Prisma Studio (GUI para inspeccionar datos)
+npx prisma studio
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+**Usuario administrador creado por el seed:**
 
-## Resources
+| Campo | Valor |
+|---|---|
+| Email | `admin@gopasstasks.com` |
+| Contraseña | `Admin1234!` |
+| Rol | `ADMIN` |
 
-Check out a few resources that may come in handy when working with NestJS:
+---
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## Ejecutar el Servidor
 
-## Support
+```bash
+# Modo desarrollo (hot reload)
+npm run start:dev
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+# Modo producción
+npm run start:prod
 
-## Stay in touch
+# Compilar sin ejecutar
+npm run build
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+La API estará disponible en: `http://localhost:3000/api/v1`
 
-## License
+Swagger UI: `http://localhost:3000/api/docs`
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
+
+## Tests
+
+```bash
+# Tests unitarios
+npm run test
+
+# Tests en modo watch
+npm run test:watch
+
+# Cobertura de código
+npm run test:cov
+
+# Tests e2e
+npm run test:e2e
+```
+
+---
+
+## Arquitectura Hexagonal
+
+```
+src/
+├── modules/
+│   ├── auth/
+│   │   ├── application/        # Casos de uso: Login, Register
+│   │   ├── domain/             # Entidad User, Puerto IUserRepository
+│   │   └── infrastructure/
+│   │       ├── adapters/input/  # AuthController, JwtStrategy
+│   │       └── adapters/output/ # PrismaUserRepository
+│   ├── projects/
+│   │   ├── application/        # Casos de uso: CRUD + miembros
+│   │   ├── domain/             # Entidad Project, Puerto IProjectRepository
+│   │   └── infrastructure/
+│   │       ├── adapters/input/  # ProjectController
+│   │       └── adapters/output/ # PrismaProjectRepository
+│   ├── tasks/
+│   │   ├── application/        # Casos de uso: CRUD + estados + worklogs
+│   │   ├── domain/             # Entidad Task, Enum TaskStatus
+│   │   └── infrastructure/
+│   │       ├── adapters/input/  # TaskController, ProjectTasksController
+│   │       └── adapters/output/ # PrismaTaskRepository
+│   ├── users/                  # Perfil del usuario autenticado
+│   └── admin/                  # Gestión de usuarios (solo ADMIN)
+├── shared/
+│   ├── domain/exceptions/      # DomainException, RecursoNoEncontrado, etc.
+│   ├── guards/                 # JwtAuthGuard, RolesGuard, @Roles()
+│   └── infrastructure/
+│       ├── database/           # PrismaService
+│       ├── filters/            # GlobalExceptionFilter
+│       └── health/             # HealthController
+└── main.ts
+```
+
+**Principio de dependencia:**
+
+```
+Input Adapters → Input Ports → Domain Core → Output Ports → Output Adapters
+```
+
+El dominio nunca importa Prisma, NestJS ni ningún framework externo.
+
+---
+
+## Endpoints Principales
+
+```
+POST   /api/v1/auth/register              Registrar usuario
+POST   /api/v1/auth/login                 Iniciar sesión
+POST   /api/v1/auth/logout                Cerrar sesión
+
+GET    /api/v1/projects                   Listar proyectos del usuario
+POST   /api/v1/projects                   Crear proyecto
+GET    /api/v1/projects/:id               Obtener proyecto
+PATCH  /api/v1/projects/:id               Actualizar proyecto
+DELETE /api/v1/projects/:id               Eliminar proyecto
+POST   /api/v1/projects/:id/members       Agregar miembro
+DELETE /api/v1/projects/:id/members/:uid  Remover miembro
+
+GET    /api/v1/projects/:id/tasks         Listar tareas del proyecto
+POST   /api/v1/tasks                      Crear tarea
+GET    /api/v1/tasks/:id                  Obtener tarea
+PATCH  /api/v1/tasks/:id                  Actualizar tarea
+DELETE /api/v1/tasks/:id                  Eliminar tarea
+PATCH  /api/v1/tasks/:id/status           Cambiar estado
+POST   /api/v1/tasks/:id/assign           Asignar usuario
+DELETE /api/v1/tasks/:id/assign/:uid      Desasignar usuario
+POST   /api/v1/tasks/:id/work-logs        Registrar tiempo
+GET    /api/v1/tasks/:id/work-logs        Listar registros de tiempo
+
+GET    /api/v1/users/me                   Perfil propio
+PATCH  /api/v1/users/me                   Actualizar perfil
+
+GET    /api/v1/admin/users                Listar usuarios (ADMIN)
+PATCH  /api/v1/admin/users/:id/role       Cambiar rol de usuario (ADMIN)
+
+GET    /api/health                        Health check (sin auth)
+```
+
+Documentación completa disponible en Swagger: `http://localhost:3000/api/docs`
+
+---
+
+## Transiciones de Estado de Tareas
+
+```
+BACKLOG     → EN_PROGRESO
+EN_PROGRESO → PRUEBAS_QA, BACKLOG
+PRUEBAS_QA  → EN_PROGRESO, LISTO
+LISTO       → APROBADO, EN_PROGRESO
+APROBADO    → (ninguna transición permitida)
+```
+
+---
+
+## Seguridad
+
+- **JWT en Cookie HttpOnly:** El token nunca se expone en el body de la respuesta.
+- **Helmet:** Protección de cabeceras HTTP (XSS, Clickjacking, MIME sniffing).
+- **CORS restrictivo:** Solo el dominio configurado en `FRONTEND_URL` puede acceder.
+- **ValidationPipe global:** `whitelist: true` descarta campos no declarados en DTOs.
+- **Fail Fast:** Si falta una variable de entorno crítica, la app no inicia.
+
+---
+
+## Linting
+
+```bash
+npm run lint
+npm run lint:fix
+npm run format
+```

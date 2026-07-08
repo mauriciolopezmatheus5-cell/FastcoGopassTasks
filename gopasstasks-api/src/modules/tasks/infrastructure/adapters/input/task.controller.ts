@@ -118,7 +118,7 @@ export class TaskController {
   @ApiOperation({ summary: 'Actualizar una tarea' })
   @ApiResponse({ status: 200, description: 'Tarea actualizada', type: TaskResponseDto })
   @ApiResponse({ status: 400, description: 'Datos inválidos' })
-  @ApiResponse({ status: 403, description: 'Tarea en estado APROBADO' })
+  @ApiResponse({ status: 403, description: 'Tarea en estado COMPLETADA' })
   @ApiResponse({ status: 404, description: 'Tarea no encontrada' })
   @Patch(':id')
   async update(

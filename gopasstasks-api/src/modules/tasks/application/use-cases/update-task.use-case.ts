@@ -10,7 +10,7 @@ import {
 
 /**
  * Caso de uso: Actualizar los datos de una tarea.
- * Las tareas en estado APROBADO no se pueden modificar.
+ * Las tareas en estado COMPLETADA no se pueden modificar.
  */
 export class UpdateTaskUseCase {
   constructor(private readonly taskRepository: ITaskRepository) {}
@@ -22,7 +22,7 @@ export class UpdateTaskUseCase {
    * @param dto - Datos parciales a actualizar
    * @returns DTO de respuesta con la tarea actualizada
    * @throws RecursoNoEncontradoException si la tarea no existe
-   * @throws ReglaNegocioException si la tarea está en estado APROBADO
+   * @throws ReglaNegocioException si la tarea está en estado COMPLETADA
    */
   async execute(taskId: string, dto: UpdateTaskDto): Promise<TaskResponseDto> {
     const task = await this.taskRepository.findById(taskId);
@@ -30,8 +30,8 @@ export class UpdateTaskUseCase {
       throw new RecursoNoEncontradoException('tarea', taskId);
     }
 
-    if (task.status === TaskStatus.APROBADO) {
-      throw new ReglaNegocioException('No se puede modificar una tarea que ya está aprobada.');
+    if (task.status === TaskStatus.COMPLETADA) {
+      throw new ReglaNegocioException('No se puede modificar una tarea que ya está completada.');
     }
 
     if (dto.title !== undefined) task.title = dto.title;
